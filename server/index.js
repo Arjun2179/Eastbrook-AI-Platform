@@ -1,11 +1,9 @@
 import { createRequire } from 'module';
 import { fileURLToPath } from 'url';
 import path from 'path';
-import bcrypt from 'bcryptjs';
 import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
-import jwt from 'jsonwebtoken';
 import rateLimit from 'express-rate-limit';
 import { pool, testConnection, withClient } from './db.js';
 import {
@@ -21,9 +19,6 @@ import {
 
 const app = express();
 const port = Number(process.env.PORT || 3001);
-const JWT_SECRET = process.env.JWT_SECRET;
-if (!JWT_SECRET) throw new Error('JWT_SECRET environment variable is required.');
-const ROLE_VALUES = ['student', 'educator', 'analyst'];
 const VERIFICATION_VALUES = ['verified', 'partial', 'unverified'];
 const ALERT_STATUS_VALUES = ['open', 'acknowledged', 'resolved'];
 const NUDGE_STATUS_VALUES = ['sent', 'read', 'acknowledged', 'resolved'];
@@ -81,33 +76,27 @@ function normalizeVerificationStatus(value) {
   return null;
 }
 
-function inferAgeGroup(grade) {
-  if (!grade) return null;
-  const numericGrade = Number(grade);
-  if (Number.isNaN(numericGrade)) return null;
-  if (numericGrade <= 9) return '13-14';
-  return '15-17';
-}
-
-function getAuthToken(req) {
-  const authHeader = req.headers.authorization;
-  if (!authHeader) return null;
-  const [scheme, token] = authHeader.split(' ');
-  if (scheme !== 'Bearer' || !token) return null;
-  return token;
-}
-
-function requireAuth(req, res, next) {
-  const token = getAuthToken(req);
-  if (!token) {
-    return res.status(401).json({ error: 'Missing authorization token.' });
+async function requireAuth(req, res, next) {
+  const role = req.headers['x-prototype-role'];
+  if (!role || !['student', 'educator', 'analyst'].includes(role)) {
+    return res.status(401).json({ error: 'Missing or invalid prototype role header.' });
   }
 
+  let email;
+  if (role === 'student') email = 'alex.smith1@eastbrook.edu';
+  else if (role === 'educator') email = 'educator@eastbrook.edu';
+  else if (role === 'analyst') email = 'analyst@eastbrook.edu';
+
   try {
-    req.user = jwt.verify(token, JWT_SECRET);
+    const result = await pool.query('SELECT id, email, full_name, role, grade, age_group, dataset_user_key FROM profiles WHERE email = $1', [email]);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Prototype profile not found in database.' });
+    }
+    req.user = result.rows[0];
     return next();
-  } catch (_error) {
-    return res.status(403).json({ error: 'Invalid or expired token.' });
+  } catch (error) {
+    console.error('Prototype auth error:', error);
+    return res.status(500).json({ error: 'Internal server error during auth.' });
   }
 }
 
@@ -877,13 +866,10 @@ app.get('/api/public/overview', async (_req, res) => {
       `
         SELECT role, email, full_name
         FROM profiles
-        WHERE role IN ('educator', 'analyst')
-        UNION ALL
-        SELECT role, email, full_name
-        FROM profiles
-        WHERE role = 'student'
-        ORDER BY role, email
+        WHERE email = ANY($1::text[])
+        ORDER BY role ASC
       `,
+      [['alex.smith1@eastbrook.edu', 'educator@eastbrook.edu', 'analyst@eastbrook.edu']],
     );
 
     const firstStudent = demoResult.rows.find((row) => row.role === 'student') ?? null;
@@ -900,90 +886,6 @@ app.get('/api/public/overview', async (_req, res) => {
     });
   } catch (error) {
     res.status(500).json({ error: 'Failed to load public overview.' });
-  }
-});
-
-app.post('/api/auth/signup', async (req, res) => {
-  try {
-    const email = validateRequiredString(req.body.email, 'email').toLowerCase();
-    const password = validateRequiredString(req.body.password, 'password', { minLength: 8 });
-    const fullName = validateRequiredString(req.body.full_name, 'full_name');
-    const role = validateRequiredString(req.body.role, 'role');
-
-    if (!ROLE_VALUES.includes(role)) {
-      throw new Error('role must be student, educator, or analyst.');
-    }
-
-    const grade = req.body.grade ? String(req.body.grade) : null;
-    const ageGroup = req.body.age_group ? String(req.body.age_group) : inferAgeGroup(grade);
-    const passwordHash = await bcrypt.hash(password, 10);
-
-    const result = await withClient(async (client) => {
-      await client.query('BEGIN');
-      try {
-        const insertResult = await client.query(
-          `
-            INSERT INTO profiles (email, password_hash, full_name, role, grade, age_group)
-            VALUES ($1, $2, $3, $4, $5, $6)
-            RETURNING id, email, full_name, role, grade, age_group, avatar_url, dataset_user_key
-          `,
-          [email, passwordHash, fullName, role, grade, ageGroup],
-        );
-
-        if (role === 'student') {
-          const educatorResult = await client.query(`SELECT id FROM profiles WHERE role = 'educator' ORDER BY created_at ASC LIMIT 1`);
-          const educatorId = educatorResult.rows[0]?.id;
-          if (educatorId) {
-            await client.query(
-              `
-                INSERT INTO educator_student_map (educator_id, student_id)
-                VALUES ($1, $2)
-                ON CONFLICT DO NOTHING
-              `,
-              [educatorId, insertResult.rows[0].id],
-            );
-          }
-        }
-
-        await client.query('COMMIT');
-        return insertResult.rows[0];
-      } catch (error) {
-        await client.query('ROLLBACK');
-        throw error;
-      }
-    });
-
-    const token = jwt.sign({ id: result.id, email: result.email, role: result.role }, JWT_SECRET, { expiresIn: '24h' });
-    res.status(201).json({ token, user: result });
-  } catch (error) {
-    if (error.code === '23505') {
-      return res.status(400).json({ error: 'That email is already registered.' });
-    }
-    return res.status(400).json({ error: error.message || 'Failed to create account.' });
-  }
-});
-
-app.post('/api/auth/login', async (req, res) => {
-  try {
-    const email = validateRequiredString(req.body.email, 'email').toLowerCase();
-    const password = validateRequiredString(req.body.password, 'password', { minLength: 8 });
-    const result = await pool.query(`SELECT * FROM profiles WHERE email = $1`, [email]);
-    const user = result.rows[0];
-
-    if (!user) {
-      return res.status(401).json({ error: 'Invalid email or password.' });
-    }
-
-    const passwordValid = await bcrypt.compare(password, user.password_hash);
-    if (!passwordValid) {
-      return res.status(401).json({ error: 'Invalid email or password.' });
-    }
-
-    const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: '24h' });
-    delete user.password_hash;
-    return res.json({ token, user });
-  } catch (error) {
-    return res.status(400).json({ error: error.message || 'Failed to sign in.' });
   }
 });
 

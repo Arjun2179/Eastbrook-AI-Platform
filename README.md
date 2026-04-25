@@ -20,7 +20,7 @@ This `app/` directory is now the main Eastbrook website. It combines:
 
 ## Setup
 
-1. Add `DATABASE_URL` and `JWT_SECRET` to `app/.env.local`.
+1. Add `DATABASE_URL` to `app/.env.local`.
 2. Install dependencies:
 
 ```bash
@@ -49,6 +49,9 @@ Start the frontend:
 npm run dev
 ```
 
+Open the landing page and choose a role card.
+The assignment prototype does not require a separate login or signup page.
+
 ## Useful scripts
 
 ```bash
@@ -61,12 +64,14 @@ npm run build
 
 ## Demo accounts
 
-After `npm run db:init`, the console prints:
+After `npm run db:init`, the prototype role selector maps to these seeded profiles:
 
-- one seeded student email
+- `alex.smith1@eastbrook.edu`
 - `educator@eastbrook.edu`
 - `analyst@eastbrook.edu`
-- the shared demo password
+
+The prototype UI does not ask for a password.
+If you manually test seeded accounts outside the role selector, the shared password is `Password123!`.
 
 ## Verification
 

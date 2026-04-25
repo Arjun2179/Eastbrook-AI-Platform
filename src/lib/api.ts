@@ -8,8 +8,8 @@ export class ApiError extends Error {
   }
 }
 
-export function getStoredToken() {
-  return localStorage.getItem('eastbrook_token')
+export function getStoredRole() {
+  return localStorage.getItem('eastbrook_prototype_role')
 }
 
 interface ApiFetchOptions extends Omit<RequestInit, 'body'> {
@@ -26,9 +26,9 @@ export async function apiFetch<T>(path: string, options: ApiFetchOptions = {}): 
   }
 
   if (auth) {
-    const token = getStoredToken()
-    if (token) {
-      requestHeaders.set('Authorization', `Bearer ${token}`)
+    const role = getStoredRole()
+    if (role) {
+      requestHeaders.set('X-Prototype-Role', role)
     }
   }
 

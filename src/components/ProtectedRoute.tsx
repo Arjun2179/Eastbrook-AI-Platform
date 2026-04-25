@@ -19,7 +19,7 @@ export default function ProtectedRoute({ children, allowedRoles }: Props) {
   }
 
   if (!user || !profile) {
-    return <Navigate to="/login" replace />
+    return <Navigate to="/" replace />
   }
 
   if (allowedRoles && !allowedRoles.includes(profile.role)) {

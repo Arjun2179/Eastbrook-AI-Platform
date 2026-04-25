@@ -17,12 +17,31 @@ interface AuthState {
   token: string | null
   profile: Profile | null
   loading: boolean
-  signUp: (email: string, password: string, fullName: string, role: string, grade?: string) => Promise<{ error: string | null }>
-  signIn: (email: string, password: string) => Promise<{ error: string | null }>
+  signInAsRole: (role: 'student' | 'educator' | 'analyst') => Promise<void>
   signOut: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthState | undefined>(undefined)
+const STORAGE_KEY = 'eastbrook_prototype_role'
+
+function isPrototypeRole(value: string | null): value is Profile['role'] {
+  return value === 'student' || value === 'educator' || value === 'analyst'
+}
+
+async function fetchPrototypeProfile(role: Profile['role']) {
+  const response = await fetch('/api/auth/me', {
+    headers: {
+      'X-Prototype-Role': role,
+    },
+  })
+
+  if (!response.ok) {
+    throw new Error('Failed to restore prototype profile.')
+  }
+
+  const payload = await response.json() as { user: Profile }
+  return payload.user
+}
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<{ id: string, email: string } | null>(null)
@@ -30,97 +49,62 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
 
-  async function fetchProfile(authToken: string) {
-    try {
-      const res = await fetch('/api/auth/me', {
-        headers: { Authorization: `Bearer ${authToken}` }
-      })
-      if (res.ok) {
-        const { user: profileData } = await res.json()
-        setProfile(profileData)
-        setUser({ id: profileData.id, email: profileData.email })
-        setToken(authToken)
-      } else {
-        localStorage.removeItem('eastbrook_token')
-        setToken(null)
-        setUser(null)
-        setProfile(null)
+  useEffect(() => {
+    let active = true
+
+    async function restorePrototypeAccess() {
+      const savedRole = localStorage.getItem(STORAGE_KEY)
+      if (!isPrototypeRole(savedRole)) {
+        if (active) setLoading(false)
+        return
       }
-    } catch (e) {
-      console.error(e)
+
+      try {
+        const restoredProfile = await fetchPrototypeProfile(savedRole)
+        if (!active) return
+        setProfile(restoredProfile)
+        setUser({ id: restoredProfile.id, email: restoredProfile.email })
+        setToken(`prototype-${savedRole}`)
+      } catch {
+        localStorage.removeItem(STORAGE_KEY)
+        if (!active) return
+        setProfile(null)
+        setUser(null)
+        setToken(null)
+      } finally {
+        if (active) setLoading(false)
+      }
+    }
+
+    void restorePrototypeAccess()
+
+    return () => {
+      active = false
+    }
+  }, [])
+
+  async function signInAsRole(role: 'student' | 'educator' | 'analyst') {
+    setLoading(true)
+    try {
+      const prototypeProfile = await fetchPrototypeProfile(role)
+      localStorage.setItem(STORAGE_KEY, role)
+      setProfile(prototypeProfile)
+      setUser({ id: prototypeProfile.id, email: prototypeProfile.email })
+      setToken(`prototype-${role}`)
     } finally {
       setLoading(false)
     }
   }
 
-  useEffect(() => {
-    const savedToken = localStorage.getItem('eastbrook_token')
-    if (savedToken) {
-      fetchProfile(savedToken)
-    } else {
-      setLoading(false)
-    }
-  }, [])
-
-  function inferAgeGroup(grade?: string) {
-    if (!grade) return null
-    const numericGrade = Number(grade)
-    if (!Number.isFinite(numericGrade)) return null
-    return numericGrade <= 9 ? '13-14' : '15-17'
-  }
-
-  async function signUp(email: string, password: string, fullName: string, role: string, grade?: string) {
-    try {
-      const res = await fetch('/api/auth/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email,
-          password,
-          full_name: fullName,
-          role,
-          grade,
-          age_group: role === 'student' ? inferAgeGroup(grade) : null
-        })
-      })
-      const data = await res.json()
-      if (!res.ok) return { error: data.error || 'Signup failed' }
-      
-      localStorage.setItem('eastbrook_token', data.token)
-      await fetchProfile(data.token)
-      return { error: null }
-    } catch (e) {
-      return { error: 'Network error' }
-    }
-  }
-
-  async function signIn(email: string, password: string) {
-    try {
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      })
-      const data = await res.json()
-      if (!res.ok) return { error: data.error || 'Login failed' }
-      
-      localStorage.setItem('eastbrook_token', data.token)
-      await fetchProfile(data.token)
-      return { error: null }
-    } catch (e) {
-      return { error: 'Network error' }
-    }
-  }
-
   async function signOut() {
-    localStorage.removeItem('eastbrook_token')
+    localStorage.removeItem(STORAGE_KEY)
     setToken(null)
     setUser(null)
     setProfile(null)
   }
 
   return (
-    <AuthContext.Provider value={{ user, token, profile, loading, signUp, signIn, signOut }}>
+    <AuthContext.Provider value={{ user, token, profile, loading, signInAsRole, signOut }}>
       {children}
     </AuthContext.Provider>
   )

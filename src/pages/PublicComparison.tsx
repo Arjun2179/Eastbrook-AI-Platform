@@ -77,8 +77,14 @@ function AnalysisBlock({ title, text, color = 'blue' }: { title: string; text: s
   const c = palette[color]
   return (
     <div style={{ background: c.bg, border: `1px solid ${c.border}`, borderLeft: `4px solid ${c.accent}`, borderRadius: 10, padding: '14px 18px', marginTop: 16 }}>
+      <div style={{ fontWeight: 700, fontSize: '0.68rem', color: c.accent, marginBottom: 6, textTransform: 'uppercase', letterSpacing: '.06em' }}>
+        Draft presenter note
+      </div>
       <div style={{ fontWeight: 700, fontSize: '0.8rem', color: c.accent, marginBottom: 6, textTransform: 'uppercase', letterSpacing: '.04em' }}>{title}</div>
       <div style={{ fontSize: '0.79rem', color: c.text, lineHeight: 1.75 }}>{text}</div>
+      <div style={{ fontSize: '0.7rem', color: c.text, marginTop: 10, opacity: 0.8 }}>
+        Rewrite this in your own words for the final report or slide narration.
+      </div>
     </div>
   )
 }
@@ -187,12 +193,21 @@ export default function PublicComparison() {
           <div style={{ fontWeight: 700, fontSize: '0.88rem', color: '#1E40AF', marginBottom: 8 }}>Study Context & Hypothesis</div>
           <div style={{ fontSize: '0.79rem', color: '#374151', lineHeight: 1.8 }}>
             This report operationalises the Eastbrook Youth AI Well-Being framework by comparing two consecutive observation phases:
-            the <strong>AS-IS phase</strong> (baseline, no platform intervention — 200 students × 30 days) and the <strong>TO-BE phase</strong>
-            (post-deployment, with real-time nudging and session monitoring — 202 students × 30 days).
+            the <strong>AS-IS phase</strong> (baseline, no platform intervention) and the <strong>TO-BE phase</strong>
+            (post-deployment, with real-time nudging and session monitoring). The dataset tracks the same Eastbrook cohort across two 15-day windows,
+            producing a combined <strong>12,000 student-day observations</strong>.
             The platform's core hypothesis, grounded in <em>automation bias theory</em> (Parasuraman &amp; Manzey, 2010), is that
             making AI usage patterns transparent to both students and educators creates behavioural accountability, reduces
             uncritical AI acceptance, and measurably improves physical well-being markers associated with screen over-exposure.
             The seven charts below test this hypothesis across verification behaviour, physical health, reliance classification, and cognitive independence dimensions.
+          </div>
+        </div>
+
+        <div style={{ background: '#FEFCE8', border: '1px solid #FDE68A', borderRadius: 12, padding: '14px 18px', marginBottom: 28, borderLeft: '4px solid #D97706' }}>
+          <div style={{ fontWeight: 700, fontSize: '0.82rem', color: '#92400E', marginBottom: 6 }}>Submission note</div>
+          <div style={{ fontSize: '0.78rem', color: '#78350F', lineHeight: 1.75 }}>
+            The commentary panels on this page are <strong>draft talking points</strong> for rehearsal and slide preparation.
+            Keep the visuals and exact metrics, but write your own final interpretation in the report deck so the submitted analysis reflects your team&apos;s voice and reasoning.
           </div>
         </div>
 
@@ -476,15 +491,19 @@ export default function PublicComparison() {
 
         {/* ── Synthesis: Data Story ─────────────────────────────────── */}
         <div style={{ background: '#EFF6FF', border: '1px solid #BFDBFE', borderRadius: 12, padding: '22px 26px', borderLeft: '5px solid #1D4ED8', marginBottom: 32 }}>
-          <div style={{ fontWeight: 700, fontSize: '0.95rem', color: '#1E40AF', marginBottom: 12 }}>Synthesis: Data Story — What Changed, Why It Matters, and What It Proves</div>
+          <div style={{ fontWeight: 700, fontSize: '0.95rem', color: '#1E40AF', marginBottom: 12 }}>Draft synthesis prompt — turn this into your own conclusion slide</div>
           <div style={{ fontSize: '0.8rem', color: '#1E3A8A', lineHeight: 1.85 }}>
-            <strong>What changed:</strong> Across all seven analytical dimensions — verification rate, screen time, eye health, reliance classification, physical strain, break adherence, and cognitive independence — the TO-BE phase demonstrates statistically consistent improvement relative to AS-IS baseline. No primary KPI regressed.
+            Build your final wrap-up from the charts above. A strong submission usually explains:
             <br /><br />
-            <strong>Why it changed:</strong> The Eastbrook platform's three-mechanism intervention design — real-time verification nudges, session-limit alerts, and break reminders — addressed the root causes simultaneously: automation bias (nudges), physical over-exposure (session limits), and recovery deficit (break reminders). Each mechanism targeted a distinct failure mode in unregulated adolescent AI use.
+            <strong>What changed:</strong> Identify which KPIs improved, which student behaviors shifted most, and whether any measure stayed flat.
             <br /><br />
-            <strong>What it proves:</strong> The study confirms the platform's core hypothesis: transparency-based, non-restrictive AI monitoring creates behavioural accountability sufficient to produce measurable improvements across behavioral and health KPIs. The over-reliant student cohort shows the largest gains in all dimensions, validating the risk-stratification design — targeted interventions for highest-risk users produce the highest marginal returns. The absence of regression in the under-reliant and appropriate-reliance cohorts confirms that the intervention does not negatively affect students already exhibiting healthy AI use patterns.
+            <strong>Why it matters:</strong> Connect those shifts to the project problem statement: automation bias, screen over-exposure, verification habits, and student independence.
             <br /><br />
-            <strong>Limitations:</strong> The study is bounded to 30 observation days per phase. Long-term habituation decay, cohort self-selection effects, and the absence of a randomised control group are acknowledged limitations that require longitudinal follow-up. Nevertheless, the directional consistency across all seven dimensions provides strong convergent validity for the platform's effectiveness.
+            <strong>What likely caused the change:</strong> Link the improvements back to the platform mechanics such as nudges, session alerts, and break reminders.
+            <br /><br />
+            <strong>What to be careful about:</strong> Mention limits like the short observation window, simulated data assumptions, or places where the evidence is directional rather than definitive.
+            <br /><br />
+            <strong>How to make it original:</strong> Reference the exact numbers from your charts and explain them in your own team&apos;s wording instead of copying this page directly.
           </div>
         </div>
 
@@ -493,10 +512,9 @@ export default function PublicComparison() {
           Eastbrook Youth AI Well-Being Study · Assignment 3.2 Part 3 — AS-IS vs TO-BE Impact Analysis<br />
           Saint Louis University MIF 2026 · Dr. Tatiana Cardona<br />
           Team: Tejaswini (PM) · Pavani (BA) · Vardhan (Data Analyst) · Vinay (Technical Lead) · Arjun (Documentation Lead)<br />
-          Data: 402 students · 12,000 student-day observations · 26 behavioral and health variables
+          Data: 400 students · 12,000 student-day observations · 34 dataset fields
         </div>
       </div>
     </div>
   )
 }
-

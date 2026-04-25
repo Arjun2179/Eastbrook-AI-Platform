@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { AlertTriangle, BarChart3, Bell, BookOpen, Shield } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { BarChart3, Bell, BookOpen, Shield, ArrowRight } from 'lucide-react'
 import { apiFetch } from '../lib/api'
+import { useAuth } from '../contexts/AuthContext'
 
 interface PublicOverviewResponse {
   overview: {
@@ -15,40 +16,13 @@ interface PublicOverviewResponse {
       avgEyeDryness: number
     }
   }
-  demoUsers: {
-    student: { email: string; full_name: string } | null
-    educator: { email: string; full_name: string } | null
-    analyst: { email: string; full_name: string } | null
-  }
 }
-
-const FEATURES = [
-  {
-    icon: <BookOpen size={24} />,
-    title: 'Student Portal',
-    description: 'Students log real AI sessions, complete training modules, review nudges, and track healthier habits over time.',
-    accent: 'var(--student)',
-    bg: 'var(--student-light)',
-  },
-  {
-    icon: <Bell size={24} />,
-    title: 'Educator Console',
-    description: 'Educators monitor cohort risk, review alerts, send nudges, and drill into each student using live operational data.',
-    accent: 'var(--educator)',
-    bg: 'var(--educator-light)',
-  },
-  {
-    icon: <BarChart3 size={24} />,
-    title: 'Analyst Dashboard',
-    description: 'Analysts explore the full Eastbrook dataset with research-question views, AS-IS vs TO-BE comparison, and KPI tracking.',
-    accent: 'var(--analyst)',
-    bg: 'var(--analyst-light)',
-  },
-]
 
 export default function Landing() {
   const [data, setData] = useState<PublicOverviewResponse | null>(null)
   const [error, setError] = useState('')
+  const { signInAsRole } = useAuth()
+  const navigate = useNavigate()
 
   useEffect(() => {
     let active = true
@@ -73,32 +47,20 @@ export default function Landing() {
     }
   }, [])
 
-  const heroStats = data?.overview.heroStats
-  const statTiles = [
-    {
-      value: heroStats ? heroStats.totalDailyPrompts.toLocaleString() : '...',
-      label: 'Average Daily AI Prompts',
-      color: 'var(--student)',
-    },
-    {
-      value: heroStats ? `${heroStats.avgScreenTime} hrs` : '...',
-      label: 'Average Screen Time',
-      color: 'var(--warning)',
-    },
-    {
-      value: heroStats ? `${heroStats.avgVerificationRate}%` : '...',
-      label: 'Verification Rate',
-      color: 'var(--success)',
-    },
-    {
-      value: heroStats ? `${heroStats.avgEyeDryness}/10` : '...',
-      label: 'Average Eye Dryness',
-      color: 'var(--danger)',
-    },
-  ]
+  async function handleRoleSelect(role: 'student' | 'educator' | 'analyst') {
+    try {
+      setError('')
+      await signInAsRole(role)
+      navigate('/app')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to open prototype access.')
+    }
+  }
+
+  const overview = data?.overview
 
   return (
-    <div>
+    <div style={{ minHeight: '100vh', background: 'var(--bg-primary)' }}>
       <nav
         style={{
           position: 'fixed',
@@ -106,209 +68,267 @@ export default function Landing() {
           left: 0,
           right: 0,
           zIndex: 100,
-          background: 'rgba(15,23,42,.88)',
-          backdropFilter: 'blur(12px)',
-          borderBottom: '1px solid rgba(255,255,255,.08)',
+          background: 'rgba(15,23,42,.4)',
+          backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
+          borderBottom: '1px solid rgba(255,255,255,.05)',
           padding: '0 32px',
-          height: 56,
+          height: 64,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <Shield size={20} color="#60A5FA" />
-          <span style={{ fontWeight: 800, fontSize: '0.95rem', color: '#fff' }}>
-            Eastbrook <span style={{ color: '#93C5FD' }}>AI Well-Being</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <Shield size={24} color="var(--primary)" />
+          <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.2rem', color: '#fff' }}>
+            Eastbrook <span style={{ color: 'var(--primary)' }}>Youth AI</span>
           </span>
-        </div>
-        <div style={{ display: 'flex', gap: 8 }}>
-          <Link to="/login" className="btn btn-ghost" style={{ color: 'rgba(255,255,255,.8)' }}>
-            Log In
-          </Link>
-          <Link to="/signup" className="btn btn-primary btn-sm">
-            Create Account
-          </Link>
         </div>
       </nav>
 
-      <section className="landing-hero" style={{ paddingTop: 140 }}>
-        <div className="landing-hero-content">
+      <section className="landing-hero" style={{ paddingTop: 160, paddingBottom: 80, textAlign: 'center' }}>
+        <div className="landing-hero-content" style={{ maxWidth: 1000, margin: '0 auto', padding: '0 24px' }}>
           <div
             style={{
               display: 'inline-flex',
               alignItems: 'center',
-              gap: 6,
-              background: 'rgba(96,165,250,.12)',
+              gap: 8,
+              background: 'rgba(96,165,250,.1)',
               border: '1px solid rgba(96,165,250,.2)',
               borderRadius: 'var(--radius-full)',
-              padding: '6px 16px',
-              marginBottom: 24,
-              fontSize: '0.78rem',
+              padding: '8px 20px',
+              marginBottom: 32,
+              fontSize: '0.85rem',
               color: '#BFDBFE',
               fontWeight: 600,
+              letterSpacing: '0.02em',
             }}
           >
-            <Shield size={14} /> Unified Research + Intervention Platform
+            <Shield size={16} /> Prototype Access Portal
           </div>
-          <h1>
-            One Eastbrook Website for
-            <br />
-            <span>Student AI Safety and Analytics</span>
+          <h1 style={{ 
+            fontFamily: 'var(--font-heading)', 
+            fontSize: 'clamp(3rem, 5vw, 4.5rem)', 
+            fontWeight: 800, 
+            lineHeight: 1.1,
+            letterSpacing: '-0.02em',
+            marginBottom: 24,
+            background: 'linear-gradient(to right, #fff, #94a3b8)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent'
+          }}>
+            AI Safety & Well-Being
           </h1>
-          <p>
-            The platform now combines the coursework dashboard, the prototype workflow, and the live app into one
-            dynamic product backed by PostgreSQL. Students log sessions, educators intervene, and analysts measure
-            whether habits improve across the full Eastbrook dataset.
+          <p style={{ 
+            fontSize: '1.2rem', 
+            color: 'var(--text-secondary)', 
+            marginBottom: 64,
+            lineHeight: 1.6,
+            maxWidth: 600,
+            margin: '0 auto 64px'
+          }}>
+            Select a role below to enter the prototype. No email or password screen is required for the assignment submission.
           </p>
-          <div className="landing-hero-btns">
-            <Link to="/login" className="btn btn-primary btn-xl">
-              Open Demo
-            </Link>
-            <Link to="/signup" className="btn btn-white-outline btn-xl">
-              Create New Account
-            </Link>
-          </div>
-          <div className="landing-trust">
-            <div className="landing-trust-item">
-              <div className="val">{data?.overview.studentCount ?? '...'}</div>
-              <div className="lbl">Seeded Students</div>
-            </div>
-            <div className="landing-trust-item">
-              <div className="val">{data?.overview.observationCount.toLocaleString() ?? '...'}</div>
-              <div className="lbl">Student-Day Observations</div>
-            </div>
-            <div className="landing-trust-item">
-              <div className="val">{data?.overview.phases.join(' + ') ?? '...'}</div>
-              <div className="lbl">Dataset Phases</div>
-            </div>
-            <div className="landing-trust-item">
-              <div className="val">3</div>
-              <div className="lbl">Live Role Portals</div>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      <section className="landing-stats">
-        <div className="landing-stats-inner">
-          <div className="landing-section-header" style={{ marginBottom: 32 }}>
-            <h2>Baseline Data at a Glance</h2>
-            <p>The landing view now pulls directly from the imported Eastbrook dataset.</p>
-          </div>
-          {error ? (
-            <div className="card" style={{ borderLeft: '4px solid var(--danger)' }}>
-              <p style={{ margin: 0 }}>{error}</p>
-            </div>
-          ) : (
-            <div className="landing-stats-grid">
-              {statTiles.map((tile) => (
-                <div className="stat-tile card" key={tile.label}>
-                  <div className="stat-val" style={{ color: tile.color }}>
-                    {tile.value}
-                  </div>
-                  <div className="stat-label">{tile.label}</div>
-                </div>
-              ))}
+          {error && (
+            <div style={{
+              maxWidth: 680,
+              margin: '0 auto 24px',
+              padding: '12px 16px',
+              borderRadius: 'var(--radius)',
+              background: 'rgba(239,68,68,0.12)',
+              border: '1px solid rgba(239,68,68,0.24)',
+              color: '#FECACA',
+              fontSize: '0.86rem',
+              textAlign: 'left',
+            }}>
+              {error}
             </div>
           )}
-        </div>
-      </section>
 
-      <section className="landing-section landing-gray">
-        <div className="landing-section-inner">
-          <div className="landing-section-header">
-            <h2>How the Intervention Loop Works</h2>
-            <p>Every part of the product now feeds the same live workflow.</p>
-          </div>
-          <div className="step-grid">
-            <div className="card card-hover step-card">
-              <div className="step-num">1</div>
-              <h3>Students record real sessions</h3>
-              <p>Session logs capture prompts, verification status, breaks, and symptom scores.</p>
-            </div>
-            <div className="card card-hover step-card">
-              <div className="step-num">2</div>
-              <h3>Risk is scored on the server</h3>
-              <p>Alerts open automatically when behaviour crosses risk thresholds defined in the shared scoring service.</p>
-            </div>
-            <div className="card card-hover step-card">
-              <div className="step-num">3</div>
-              <h3>Educators nudge and analysts measure</h3>
-              <p>Interventions are tracked end to end, and analyst views compare AS-IS and TO-BE outcomes dynamically.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="landing-section">
-        <div className="landing-section-inner">
-          <div className="landing-section-header">
-            <h2>Three Dynamic Portals</h2>
-            <p>Each area reads from the same data source instead of a separate mock branch.</p>
-          </div>
-          <div className="feature-grid">
-            {FEATURES.map((feature) => (
-              <div className="feature-card card-hover" key={feature.title}>
-                <div className="feature-icon" style={{ background: feature.bg, color: feature.accent }}>
-                  {feature.icon}
+          {overview && (
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+              gap: 14,
+              marginBottom: 32,
+            }}>
+              <div className="card" style={{ background: 'rgba(255,255,255,0.08)', borderColor: 'rgba(255,255,255,0.12)' }}>
+                <div style={{ color: '#BFDBFE', fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.06em', marginBottom: 6 }}>
+                  Dataset
                 </div>
-                <h3>{feature.title}</h3>
-                <p style={{ fontSize: '0.88rem' }}>{feature.description}</p>
+                <div style={{ color: '#fff', fontSize: '1.4rem', fontWeight: 800 }}>{overview.studentCount}</div>
+                <div style={{ color: 'rgba(255,255,255,.64)', fontSize: '0.8rem' }}>linked student profiles</div>
               </div>
-            ))}
+              <div className="card" style={{ background: 'rgba(255,255,255,0.08)', borderColor: 'rgba(255,255,255,0.12)' }}>
+                <div style={{ color: '#BFDBFE', fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.06em', marginBottom: 6 }}>
+                  Observations
+                </div>
+                <div style={{ color: '#fff', fontSize: '1.4rem', fontWeight: 800 }}>{overview.observationCount.toLocaleString()}</div>
+                <div style={{ color: 'rgba(255,255,255,.64)', fontSize: '0.8rem' }}>{overview.phases.join(' + ')}</div>
+              </div>
+              <div className="card" style={{ background: 'rgba(255,255,255,0.08)', borderColor: 'rgba(255,255,255,0.12)' }}>
+                <div style={{ color: '#BFDBFE', fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.06em', marginBottom: 6 }}>
+                  AS-IS Verification
+                </div>
+                <div style={{ color: '#fff', fontSize: '1.4rem', fontWeight: 800 }}>{overview.heroStats.avgVerificationRate}%</div>
+                <div style={{ color: 'rgba(255,255,255,.64)', fontSize: '0.8rem' }}>baseline behaviour</div>
+              </div>
+              <div className="card" style={{ background: 'rgba(255,255,255,0.08)', borderColor: 'rgba(255,255,255,0.12)' }}>
+                <div style={{ color: '#BFDBFE', fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.06em', marginBottom: 6 }}>
+                  Daily Prompts
+                </div>
+                <div style={{ color: '#fff', fontSize: '1.4rem', fontWeight: 800 }}>{overview.heroStats.totalDailyPrompts.toLocaleString()}</div>
+                <div style={{ color: 'rgba(255,255,255,.64)', fontSize: '0.8rem' }}>AS-IS average</div>
+              </div>
+            </div>
+          )}
+
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
+            gap: 24, 
+            textAlign: 'left' 
+          }}>
+            {/* Student Card */}
+            <button 
+              onClick={() => handleRoleSelect('student')}
+              style={{
+                background: 'rgba(255,255,255,0.03)',
+                border: '1px solid rgba(255,255,255,0.08)',
+                borderRadius: 'var(--radius-lg)',
+                padding: 32,
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+                backdropFilter: 'blur(16px)',
+                WebkitBackdropFilter: 'blur(16px)',
+              }}
+              className="role-card-hover"
+            >
+              <div style={{ 
+                background: 'rgba(59,130,246,0.15)', 
+                color: '#60A5FA',
+                padding: 16, 
+                borderRadius: 'var(--radius-md)',
+                marginBottom: 24
+              }}>
+                <BookOpen size={32} />
+              </div>
+              <h3 style={{ color: '#fff', fontSize: '1.5rem', marginBottom: 12 }}>Student Portal</h3>
+              <p style={{ color: 'var(--text-secondary)', marginBottom: 24, lineHeight: 1.5, flex: 1, textAlign: 'left' }}>
+                Log daily AI usage, complete training modules, and track your digital well-being score.
+              </p>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#60A5FA', fontWeight: 600 }}>
+                Enter Portal <ArrowRight size={18} />
+              </div>
+            </button>
+
+            {/* Educator Card */}
+            <button 
+              onClick={() => handleRoleSelect('educator')}
+              style={{
+                background: 'rgba(255,255,255,0.03)',
+                border: '1px solid rgba(255,255,255,0.08)',
+                borderRadius: 'var(--radius-lg)',
+                padding: 32,
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+                backdropFilter: 'blur(16px)',
+                WebkitBackdropFilter: 'blur(16px)',
+              }}
+              className="role-card-hover"
+            >
+              <div style={{ 
+                background: 'rgba(16,185,129,0.15)', 
+                color: '#34D399',
+                padding: 16, 
+                borderRadius: 'var(--radius-md)',
+                marginBottom: 24
+              }}>
+                <Bell size={32} />
+              </div>
+              <h3 style={{ color: '#fff', fontSize: '1.5rem', marginBottom: 12 }}>Educator Console</h3>
+              <p style={{ color: 'var(--text-secondary)', marginBottom: 24, lineHeight: 1.5, flex: 1, textAlign: 'left' }}>
+                Monitor your student cohort, review AI safety alerts, and send supportive nudges.
+              </p>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#34D399', fontWeight: 600 }}>
+                Enter Console <ArrowRight size={18} />
+              </div>
+            </button>
+
+            {/* Analyst Card */}
+            <button 
+              onClick={() => handleRoleSelect('analyst')}
+              style={{
+                background: 'rgba(255,255,255,0.03)',
+                border: '1px solid rgba(255,255,255,0.08)',
+                borderRadius: 'var(--radius-lg)',
+                padding: 32,
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+                backdropFilter: 'blur(16px)',
+                WebkitBackdropFilter: 'blur(16px)',
+              }}
+              className="role-card-hover"
+            >
+              <div style={{ 
+                background: 'rgba(168,85,247,0.15)', 
+                color: '#C084FC',
+                padding: 16, 
+                borderRadius: 'var(--radius-md)',
+                marginBottom: 24
+              }}>
+                <BarChart3 size={32} />
+              </div>
+              <h3 style={{ color: '#fff', fontSize: '1.5rem', marginBottom: 12 }}>Analyst Dashboard</h3>
+              <p style={{ color: 'var(--text-secondary)', marginBottom: 24, lineHeight: 1.5, flex: 1, textAlign: 'left' }}>
+                Compare AS-IS vs TO-BE dataset phases and evaluate the impact of interventions.
+              </p>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#C084FC', fontWeight: 600 }}>
+                Enter Dashboard <ArrowRight size={18} />
+              </div>
+            </button>
+          </div>
+
+          <div style={{
+            marginTop: 28,
+            padding: '18px 22px',
+            borderRadius: 'var(--radius-lg)',
+            background: 'rgba(255,255,255,0.06)',
+            border: '1px solid rgba(255,255,255,0.12)',
+            textAlign: 'left',
+          }}>
+            <div style={{ color: '#fff', fontSize: '0.95rem', fontWeight: 700, marginBottom: 10 }}>How to access the prototype</div>
+            <div style={{ color: 'rgba(255,255,255,.72)', fontSize: '0.86rem', lineHeight: 1.8 }}>
+              1. Choose a role card to open the matching interface.
+              <br />
+              2. Use the sidebar to move through the student, educator, or analyst workflow.
+              <br />
+              3. Open <strong>/compare</strong> for the public AS-IS vs TO-BE comparison dashboard used in the assignment.
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="landing-section landing-dark">
-        <div className="landing-section-inner">
-          <div className="landing-section-header">
-            <h2>Demo Access</h2>
-            <p>Use the seeded accounts after running the database setup script.</p>
-          </div>
-          <div className="grid grid-3">
-            <div className="card" style={{ background: 'rgba(255,255,255,.05)', borderColor: 'rgba(255,255,255,.08)' }}>
-              <h3 style={{ color: '#fff', marginBottom: 8 }}>Student</h3>
-              <p style={{ color: 'rgba(255,255,255,.72)', margin: 0 }}>
-                {data?.demoUsers.student?.email ?? 'Seeded during setup'}
-              </p>
-            </div>
-            <div className="card" style={{ background: 'rgba(255,255,255,.05)', borderColor: 'rgba(255,255,255,.08)' }}>
-              <h3 style={{ color: '#fff', marginBottom: 8 }}>Educator</h3>
-              <p style={{ color: 'rgba(255,255,255,.72)', margin: 0 }}>
-                {data?.demoUsers.educator?.email ?? 'educator@eastbrook.edu'}
-              </p>
-            </div>
-            <div className="card" style={{ background: 'rgba(255,255,255,.05)', borderColor: 'rgba(255,255,255,.08)' }}>
-              <h3 style={{ color: '#fff', marginBottom: 8 }}>Analyst</h3>
-              <p style={{ color: 'rgba(255,255,255,.72)', margin: 0 }}>
-                {data?.demoUsers.analyst?.email ?? 'analyst@eastbrook.edu'}
-              </p>
-            </div>
-          </div>
-          <div style={{ marginTop: 16, display: 'inline-flex', alignItems: 'center', gap: 8, color: '#FDE68A', fontSize: '0.82rem' }}>
-            <AlertTriangle size={16} /> The demo password is the one printed by `npm run db:init`.
-          </div>
-        </div>
-      </section>
-
-      <section className="landing-cta">
-        <h2>Ship the Final Eastbrook Experience</h2>
-        <p>Sign in to review the unified app, or create an account to add a fresh user to the workflow.</p>
-        <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-          <Link to="/login" className="btn btn-primary btn-xl">
-            Open the App
-          </Link>
-          <Link to="/signup" className="btn btn-white-outline btn-xl">
-            Create an Account
-          </Link>
-        </div>
-      </section>
-
-      <footer className="landing-footer">
-        <p>Eastbrook Youth AI Well-Being Platform · Unified app implementation</p>
-      </footer>
+      {/* Inject some CSS for the hover effect */}
+      <style>{`
+        .role-card-hover:hover {
+          background: rgba(255,255,255,0.06) !important;
+          border-color: rgba(255,255,255,0.15) !important;
+          transform: translateY(-4px);
+          box-shadow: 0 12px 24px -8px rgba(0,0,0,0.3);
+        }
+      `}</style>
     </div>
   )
 }
