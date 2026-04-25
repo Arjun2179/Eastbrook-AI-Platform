@@ -4,6 +4,8 @@ import { Loader2, Lock, Mail, Shield } from 'lucide-react'
 import { useAuth } from '../../contexts/AuthContext'
 import { apiFetch } from '../../lib/api'
 
+const DEMO_PASSWORD = 'Password123!'
+
 interface DemoUsersResponse {
   demoUsers: {
     student: { email: string; full_name: string } | null
@@ -17,31 +19,23 @@ export default function Login() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [demoLoading, setDemoLoading] = useState<string | null>(null)
   const [demoUsers, setDemoUsers] = useState<DemoUsersResponse['demoUsers'] | null>(null)
   const { signIn } = useAuth()
   const navigate = useNavigate()
 
   useEffect(() => {
     let active = true
-
     async function loadDemoUsers() {
       try {
         const response = await apiFetch<DemoUsersResponse>('/api/public/overview', { auth: false })
-        if (active) {
-          setDemoUsers(response.demoUsers)
-        }
+        if (active) setDemoUsers(response.demoUsers)
       } catch {
-        if (active) {
-          setDemoUsers(null)
-        }
+        if (active) setDemoUsers(null)
       }
     }
-
     void loadDemoUsers()
-
-    return () => {
-      active = false
-    }
+    return () => { active = false }
   }, [])
 
   async function handleSubmit(event: React.FormEvent) {
@@ -56,6 +50,26 @@ export default function Login() {
     }
     navigate('/app')
   }
+
+  async function loginAs(role: 'student' | 'educator' | 'analyst') {
+    const user = demoUsers?.[role]
+    if (!user?.email) return
+    setDemoLoading(role)
+    setError('')
+    const result = await signIn(user.email, DEMO_PASSWORD)
+    if (result.error) {
+      setError(result.error)
+      setDemoLoading(null)
+      return
+    }
+    navigate('/app')
+  }
+
+  const demoButtons: { role: 'student' | 'educator' | 'analyst'; label: string; color: string; bg: string }[] = [
+    { role: 'student', label: 'Demo: Student', color: '#1D4ED8', bg: '#EFF6FF' },
+    { role: 'educator', label: 'Demo: Educator', color: '#059669', bg: '#ECFDF5' },
+    { role: 'analyst', label: 'Demo: Analyst', color: '#7C3AED', bg: '#F5F3FF' },
+  ]
 
   return (
     <div className="auth-page">
@@ -141,15 +155,42 @@ export default function Login() {
             Need a new account? <Link to="/signup">Create one here</Link>
           </div>
 
-          <div style={{ marginTop: 20, padding: '14px 16px', background: 'var(--brand-50)', borderRadius: 'var(--radius)', border: '1px solid var(--card-border)' }}>
-            <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '.05em' }}>
-              Seeded Demo Emails
+          <div style={{ marginTop: 20 }}>
+            <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '.05em', textAlign: 'center' }}>
+              One-click demo access
             </div>
-            <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', lineHeight: 1.8 }}>
-              <strong>Student:</strong> {demoUsers?.student?.email ?? 'Created during setup'}<br />
-              <strong>Educator:</strong> {demoUsers?.educator?.email ?? 'educator@eastbrook.edu'}<br />
-              <strong>Analyst:</strong> {demoUsers?.analyst?.email ?? 'analyst@eastbrook.edu'}<br />
-              <strong>Password:</strong> use the demo password printed by `npm run db:init`
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
+              {demoButtons.map(({ role, label, color, bg }) => (
+                <button
+                  key={role}
+                  type="button"
+                  disabled={!demoUsers?.[role] || demoLoading !== null}
+                  onClick={() => void loginAs(role)}
+                  style={{
+                    padding: '9px 8px',
+                    borderRadius: 8,
+                    border: `1.5px solid ${color}30`,
+                    background: bg,
+                    color,
+                    fontSize: '0.75rem',
+                    fontWeight: 700,
+                    cursor: demoUsers?.[role] ? 'pointer' : 'not-allowed',
+                    opacity: demoUsers?.[role] ? 1 : 0.45,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 5,
+                    transition: 'opacity 0.15s',
+                    fontFamily: 'inherit',
+                  }}
+                >
+                  {demoLoading === role ? <Loader2 size={13} className="spinner" /> : null}
+                  {label}
+                </button>
+              ))}
+            </div>
+            <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginTop: 8, textAlign: 'center' }}>
+              Logs in instantly · password: <code style={{ background: 'var(--brand-50)', padding: '1px 5px', borderRadius: 4 }}>{DEMO_PASSWORD}</code>
             </div>
           </div>
         </div>

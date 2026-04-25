@@ -1567,6 +1567,18 @@ app.get('/api/analyst/dashboard', requireAuth, requireRole('analyst'), async (re
   }
 });
 
+// Public comparison — no auth required (used for assignment Part 3 link)
+app.get('/api/public/comparison', async (_req, res) => {
+  try {
+    const rows = await fetchMetricRows();
+    const comparison = computeAnalystComparison(rows);
+    const kpis = computeAnalystKpis(rows);
+    res.json({ comparison, kpis });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to load comparison data.' });
+  }
+});
+
 app.get('/api/analyst/comparison', requireAuth, requireRole('analyst'), async (req, res) => {
   try {
     const filters = buildMetricFilters(req.query, { includePhase: false });

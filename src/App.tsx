@@ -20,6 +20,7 @@ import NudgeHistory from './pages/educator/NudgeHistory'
 import RiskTrends from './pages/educator/RiskTrends'
 
 import AnalystDashboard from './pages/analyst/AnalystDashboard'
+import PublicComparison from './pages/PublicComparison'
 
 function RoleRedirect() {
   const { profile, loading } = useAuth()
@@ -40,6 +41,7 @@ function AppRoutes() {
       <Route path="/" element={<Landing />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
+      <Route path="/compare" element={<PublicComparison />} />
 
       {/* Role redirect */}
       <Route path="/app" element={<ProtectedRoute><RoleRedirect /></ProtectedRoute>} />
