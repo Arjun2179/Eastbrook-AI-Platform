@@ -155,11 +155,13 @@ export default function PublicComparison() {
           <div style={{ fontWeight: 700, fontSize: '0.95rem', color: '#111827', marginBottom: 4 }}>Key Metric Comparison: AS-IS vs TO-BE</div>
           <div style={{ fontSize: '0.7rem', color: '#9CA3AF', marginBottom: 16 }}>Side-by-side comparison across all four core KPIs</div>
           <ResponsiveContainer width="100%" height={260}>
-            <BarChart data={barData} margin={{ top: 4, right: 16, left: 0, bottom: 0 }}>
+            <BarChart data={barData} margin={{ top: 4, right: 16, left: 8, bottom: 22 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#F0F0F0" />
-              <XAxis dataKey="name" tick={{ fontSize: 11, fill: '#6B7280' }} />
-              <YAxis tick={{ fontSize: 11, fill: '#6B7280' }} />
-              <Tooltip formatter={(v: unknown, name: unknown) => [`${v}`, name as string]} />
+              <XAxis dataKey="name" tick={{ fontSize: 11, fill: '#6B7280' }}
+                label={{ value: 'KPI Metric', position: 'insideBottom', offset: -8, fill: '#9CA3AF', fontSize: 10 }} />
+              <YAxis tick={{ fontSize: 11, fill: '#6B7280' }}
+                label={{ value: 'Metric Value', angle: -90, position: 'insideLeft', fill: '#9CA3AF', fontSize: 10, dx: -4 }} />
+              <Tooltip formatter={(v: unknown, name: unknown) => [`${v}`, name as string]} labelFormatter={l => `Metric: ${l}`} />
               <Legend wrapperStyle={{ fontSize: 11 }} />
               <Bar dataKey="AS-IS" fill="#94A3B8" radius={[4, 4, 0, 0]} />
               <Bar dataKey="TO-BE" fill="#1D4ED8" radius={[4, 4, 0, 0]} />
@@ -173,11 +175,13 @@ export default function PublicComparison() {
             <div style={{ fontWeight: 700, fontSize: '0.95rem', color: '#111827', marginBottom: 4 }}>Daily Verification Rate: AS-IS vs TO-BE</div>
             <div style={{ fontSize: '0.7rem', color: '#9CA3AF', marginBottom: 16 }}>Student verification behavior before and after the platform intervention</div>
             <ResponsiveContainer width="100%" height={240}>
-              <LineChart data={dailyComparison} margin={{ top: 4, right: 16, left: 0, bottom: 0 }}>
+              <LineChart data={dailyComparison} margin={{ top: 4, right: 16, left: 8, bottom: 22 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#F0F0F0" />
-                <XAxis dataKey="label" tick={{ fontSize: 10, fill: '#6B7280' }} interval={2} />
-                <YAxis domain={[0, 100]} tick={{ fontSize: 10, fill: '#6B7280' }} tickFormatter={v => `${v}%`} />
-                <Tooltip formatter={(v: unknown) => `${v}%`} />
+                <XAxis dataKey="label" tick={{ fontSize: 10, fill: '#6B7280' }} interval={2}
+                  label={{ value: 'Observation Day', position: 'insideBottom', offset: -8, fill: '#9CA3AF', fontSize: 10 }} />
+                <YAxis domain={[0, 100]} tick={{ fontSize: 10, fill: '#6B7280' }} tickFormatter={v => `${v}%`}
+                  label={{ value: 'Verification Rate (%)', angle: -90, position: 'insideLeft', fill: '#9CA3AF', fontSize: 10, dx: -4 }} />
+                <Tooltip formatter={(v: unknown, name: unknown) => [`${v}%`, String(name)]} labelFormatter={l => `Day ${l}`} />
                 <Legend wrapperStyle={{ fontSize: 11 }} />
                 <Line type="monotone" dataKey="asIsVerification" stroke="#94A3B8" strokeWidth={2} name="AS-IS Verification" dot={false} connectNulls />
                 <Line type="monotone" dataKey="toBeVerification" stroke="#1D4ED8" strokeWidth={2} name="TO-BE Verification" dot={false} connectNulls />

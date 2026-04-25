@@ -129,11 +129,13 @@ export default function MyProgress() {
           </div>
           {data.verificationTrend.length ? (
             <ResponsiveContainer width="100%" height={240}>
-              <LineChart data={data.verificationTrend}>
+              <LineChart data={data.verificationTrend} margin={{ top: 4, right: 16, left: 8, bottom: 22 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
-                <XAxis dataKey="label" tick={{ fontSize: 12 }} />
-                <YAxis tick={{ fontSize: 12 }} />
-                <Tooltip />
+                <XAxis dataKey="label" tick={{ fontSize: 12 }}
+                  label={{ value: 'Session', position: 'insideBottom', offset: -8, fill: '#64748B', fontSize: 11 }} />
+                <YAxis tick={{ fontSize: 12 }}
+                  label={{ value: 'Score (%)', angle: -90, position: 'insideLeft', fill: '#64748B', fontSize: 11, dx: -4 }} />
+                <Tooltip formatter={(v: unknown, name: unknown) => [`${v}`, String(name)]} labelFormatter={l => `Session: ${l}`} />
                 <Line type="monotone" dataKey="verificationScore" stroke="#10B981" strokeWidth={2.5} name="Verification %" />
                 <Line type="monotone" dataKey="riskScore" stroke="#EF4444" strokeWidth={2.5} name="Risk score" />
               </LineChart>
@@ -150,13 +152,15 @@ export default function MyProgress() {
           </div>
           {data.symptomTrend.length ? (
             <ResponsiveContainer width="100%" height={240}>
-              <BarChart data={data.symptomTrend}>
+              <BarChart data={data.symptomTrend} margin={{ top: 4, right: 16, left: 8, bottom: 22 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
-                <XAxis dataKey="label" tick={{ fontSize: 12 }} />
-                <YAxis tick={{ fontSize: 12 }} domain={[0, 10]} />
-                <Tooltip />
-                <Bar dataKey="eyeDryness" fill="#F59E0B" radius={[6, 6, 0, 0]} />
-                <Bar dataKey="neckPain" fill="#3B82F6" radius={[6, 6, 0, 0]} />
+                <XAxis dataKey="label" tick={{ fontSize: 12 }}
+                  label={{ value: 'Session', position: 'insideBottom', offset: -8, fill: '#64748B', fontSize: 11 }} />
+                <YAxis tick={{ fontSize: 12 }} domain={[0, 10]}
+                  label={{ value: 'Severity (0–10)', angle: -90, position: 'insideLeft', fill: '#64748B', fontSize: 11, dx: -4 }} />
+                <Tooltip formatter={(v: unknown, name: unknown) => [`${v}/10`, String(name)]} labelFormatter={l => `Session: ${l}`} />
+                <Bar dataKey="eyeDryness" fill="#F59E0B" radius={[6, 6, 0, 0]} name="Eye Dryness" />
+                <Bar dataKey="neckPain" fill="#3B82F6" radius={[6, 6, 0, 0]} name="Neck Pain" />
               </BarChart>
             </ResponsiveContainer>
           ) : (

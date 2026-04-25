@@ -241,12 +241,15 @@ export default function StudentDashboard() {
           </div>
           {data.verificationTrend.length ? (
             <ResponsiveContainer width="100%" height={240}>
-              <LineChart data={data.verificationTrend}>
+              <LineChart data={data.verificationTrend} margin={{ top: 4, right: 16, left: 8, bottom: 22 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
-                <XAxis dataKey="label" tick={{ fontSize: 12 }} />
-                <YAxis yAxisId="left" tick={{ fontSize: 12 }} />
-                <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 12 }} />
-                <Tooltip />
+                <XAxis dataKey="label" tick={{ fontSize: 12 }}
+                  label={{ value: 'Session', position: 'insideBottom', offset: -8, fill: '#64748B', fontSize: 11 }} />
+                <YAxis yAxisId="left" tick={{ fontSize: 12 }}
+                  label={{ value: 'Verification (%)', angle: -90, position: 'insideLeft', fill: '#64748B', fontSize: 11, dx: -4 }} />
+                <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 12 }}
+                  label={{ value: 'Risk Score', angle: 90, position: 'insideRight', fill: '#64748B', fontSize: 11, dx: 4 }} />
+                <Tooltip formatter={(v: unknown, name: unknown) => [`${v}`, String(name)]} labelFormatter={l => `Session: ${l}`} />
                 <Legend />
                 <Line yAxisId="left" type="monotone" dataKey="verificationScore" stroke="#10B981" strokeWidth={2.5} name="Verification %" />
                 <Line yAxisId="right" type="monotone" dataKey="riskScore" stroke="#EF4444" strokeWidth={2.5} name="Risk score" />
@@ -264,11 +267,13 @@ export default function StudentDashboard() {
           </div>
           {data.symptomTrend.length ? (
             <ResponsiveContainer width="100%" height={240}>
-              <BarChart data={data.symptomTrend}>
+              <BarChart data={data.symptomTrend} margin={{ top: 4, right: 16, left: 8, bottom: 22 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
-                <XAxis dataKey="label" tick={{ fontSize: 12 }} />
-                <YAxis tick={{ fontSize: 12 }} domain={[0, 10]} />
-                <Tooltip />
+                <XAxis dataKey="label" tick={{ fontSize: 12 }}
+                  label={{ value: 'Session', position: 'insideBottom', offset: -8, fill: '#64748B', fontSize: 11 }} />
+                <YAxis tick={{ fontSize: 12 }} domain={[0, 10]}
+                  label={{ value: 'Severity (0–10)', angle: -90, position: 'insideLeft', fill: '#64748B', fontSize: 11, dx: -4 }} />
+                <Tooltip formatter={(v: unknown, name: unknown) => [`${v}/10`, String(name)]} labelFormatter={l => `Session: ${l}`} />
                 <Legend />
                 <Bar dataKey="eyeDryness" fill="#F59E0B" radius={[6, 6, 0, 0]} name="Eye dryness" />
                 <Bar dataKey="neckPain" fill="#3B82F6" radius={[6, 6, 0, 0]} name="Neck pain" />
