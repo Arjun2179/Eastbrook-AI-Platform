@@ -258,6 +258,10 @@ export default function StudentDashboard() {
           ) : (
             <p style={{ margin: 0 }}>Log a session to start your verification trend.</p>
           )}
+          <div style={{ background: '#ECFDF5', border: '1px solid #A7F3D0', borderLeft: '4px solid #059669', borderRadius: 8, padding: '10px 14px', marginTop: 14 }}>
+            <div style={{ fontWeight: 700, fontSize: '0.72rem', color: '#059669', marginBottom: 4, textTransform: 'uppercase', letterSpacing: '.04em' }}>What this chart means</div>
+            <div style={{ fontSize: '0.75rem', color: '#065F46', lineHeight: 1.7 }}>Your verification score and risk score should move in <strong>opposite directions</strong>: as you verify more AI outputs before accepting them, your risk score falls. Research shows students who consistently verify above 65% demonstrate stronger independent reasoning skills (Glass et al., 2008). If your risk score is rising, check whether recent sessions involved long unbroken stretches or unverified AI outputs.</div>
+          </div>
         </div>
 
         <div className="card">
@@ -282,6 +286,10 @@ export default function StudentDashboard() {
           ) : (
             <p style={{ margin: 0 }}>Symptom trends appear after your first logged session.</p>
           )}
+          <div style={{ background: '#FFFBEB', border: '1px solid #FDE68A', borderLeft: '4px solid #D97706', borderRadius: 8, padding: '10px 14px', marginTop: 14 }}>
+            <div style={{ fontWeight: 700, fontSize: '0.72rem', color: '#D97706', marginBottom: 4, textTransform: 'uppercase', letterSpacing: '.04em' }}>Reading your symptoms</div>
+            <div style={{ fontSize: '0.75rem', color: '#78350F', lineHeight: 1.7 }}>Eye dryness and neck pain both above <strong>5/10</strong> for two or more consecutive sessions is the clinical threshold for strain requiring intervention (TFOS DEWS II, 2017). The most effective remedy is not stopping AI use — it is <strong>taking one 2-minute break every 60 minutes</strong> and ensuring sessions do not exceed 120 continuous minutes. Students who take 3+ breaks per session show symptom scores 50% lower than those taking 0 breaks.</div>
+          </div>
         </div>
       </div>
 

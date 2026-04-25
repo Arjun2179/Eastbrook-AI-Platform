@@ -168,6 +168,10 @@ export default function EducatorDashboard() {
           ) : (
             <p style={{ margin: 0 }}>Class trends will appear after students start logging sessions.</p>
           )}
+          <div style={{ background: '#ECFDF5', border: '1px solid #A7F3D0', borderLeft: '4px solid #059669', borderRadius: 8, padding: '10px 14px', marginTop: 14 }}>
+            <div style={{ fontWeight: 700, fontSize: '0.72rem', color: '#059669', marginBottom: 4, textTransform: 'uppercase', letterSpacing: '.04em' }}>Class Performance Benchmark</div>
+            <div style={{ fontSize: '0.75rem', color: '#065F46', lineHeight: 1.7 }}>A class-average verification rate <strong>above 65%</strong> with a risk score <strong>below 45</strong> is the Eastbrook study benchmark for a well-performing cohort. A ≥10% increase in class-average verification within 4 weeks of platform activation is the stated intervention success threshold. If verification is stagnant or falling alongside a rising risk score, review which students lack nudge-response history — they likely need a direct educator-initiated nudge rather than automated reminders.</div>
+          </div>
         </div>
 
         <div className="card">

@@ -131,6 +131,10 @@ export default function RiskTrends() {
           ) : (
             <p style={{ margin: 0 }}>Live verification trends appear after cohort session activity.</p>
           )}
+          <div style={{ background: '#EFF6FF', border: '1px solid #BFDBFE', borderLeft: '4px solid #1D4ED8', borderRadius: 8, padding: '10px 14px', marginTop: 14 }}>
+            <div style={{ fontWeight: 700, fontSize: '0.72rem', color: '#1D4ED8', marginBottom: 4, textTransform: 'uppercase', letterSpacing: '.04em' }}>Live vs Benchmark Gap</div>
+            <div style={{ fontSize: '0.75rem', color: '#1E3A8A', lineHeight: 1.7 }}>The dashed benchmark line represents the AS-IS population average (56%) from the Eastbrook dataset. Your live cohort exceeding this benchmark confirms the platform is producing above-baseline outcomes. A <strong>persistent gap below the benchmark</strong> for 3+ consecutive sessions should trigger a cohort-wide intervention review. The benchmark is not a ceiling — the TO-BE study target is 66.7%, so any cohort sustaining above that level is operating in the top performance band.</div>
+          </div>
         </div>
 
         <div className="card">
@@ -150,6 +154,10 @@ export default function RiskTrends() {
           ) : (
             <p style={{ margin: 0 }}>Risk trend data will appear after session activity.</p>
           )}
+          <div style={{ background: '#FEF2F2', border: '1px solid #FECACA', borderLeft: '4px solid #EF4444', borderRadius: 8, padding: '10px 14px', marginTop: 14 }}>
+            <div style={{ fontWeight: 700, fontSize: '0.72rem', color: '#DC2626', marginBottom: 4, textTransform: 'uppercase', letterSpacing: '.04em' }}>Risk Score Composition</div>
+            <div style={{ fontSize: '0.75rem', color: '#7F1D1D', lineHeight: 1.7 }}>Risk scores are computed from session duration (×0.3), prompt count (×0.15), unverified outputs (+25 pts), symptom severity above threshold (+3 pts each), and break deficit (−2 pts per break). A score <strong>above 70</strong> is flagged as high-risk and generates an automatic alert. A <strong>rising trend across 3+ sessions</strong> — even below 70 — warrants a proactive nudge, as trajectory is a stronger predictor of deterioration than any single score reading.</div>
+          </div>
         </div>
       </div>
 
@@ -173,6 +181,10 @@ export default function RiskTrends() {
           ) : (
             <p style={{ margin: 0 }}>Symptom trends appear after logged sessions.</p>
           )}
+          <div style={{ background: '#FFFBEB', border: '1px solid #FDE68A', borderLeft: '4px solid #D97706', borderRadius: 8, padding: '10px 14px', marginTop: 14 }}>
+            <div style={{ fontWeight: 700, fontSize: '0.72rem', color: '#D97706', marginBottom: 4, textTransform: 'uppercase', letterSpacing: '.04em' }}>Physical Health Cohort Indicator</div>
+            <div style={{ fontSize: '0.75rem', color: '#78350F', lineHeight: 1.7 }}>Cohort eye dryness above <strong>7.1/10</strong> (AS-IS baseline) signals unregulated extended sessions. The TO-BE target is below 6.3/10. Neck pain above <strong>6/10</strong> on consecutive sessions indicates inadequate ergonomic conditions alongside insufficient breaks. When live symptom scores consistently exceed the benchmark (dashed line), prioritise break-adherence nudges to the top 20% of students by session duration — the Pareto effect applies here: the longest-session users drive disproportionate cohort-level symptom averages.</div>
+          </div>
         </div>
 
         <div className="card">

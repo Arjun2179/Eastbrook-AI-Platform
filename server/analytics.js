@@ -408,6 +408,22 @@ export function computeAnalystComparison(allRows) {
       asIs: asIsStats.relianceDist,
       toBe: toBeStats.relianceDist,
     },
+    sessionBuckets: {
+      asIs: asIsStats.sessionBuckets,
+      toBe: toBeStats.sessionBuckets,
+    },
+    breaksBuckets: {
+      asIs: asIsStats.breaksBuckets,
+      toBe: toBeStats.breaksBuckets,
+    },
+    cognitiveByReliance: {
+      asIs: asIsStats.cognitiveByReliance,
+      toBe: toBeStats.cognitiveByReliance,
+    },
+    ageComparison: {
+      asIs: asIsStats.ageComparison,
+      toBe: toBeStats.ageComparison,
+    },
   };
 }
 
