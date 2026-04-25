@@ -241,10 +241,10 @@ export default function StudentDashboard() {
           </div>
           {data.verificationTrend.length ? (
             <ResponsiveContainer width="100%" height={240}>
-              <LineChart data={data.verificationTrend} margin={{ top: 4, right: 16, left: 8, bottom: 22 }}>
+              <LineChart data={data.verificationTrend} margin={{ top: 4, right: 16, left: 8, bottom: 44 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
                 <XAxis dataKey="label" tick={{ fontSize: 12 }}
-                  label={{ value: 'Session', position: 'insideBottom', offset: -8, fill: '#64748B', fontSize: 11 }} />
+                  label={{ value: 'Session', position: 'insideBottom', offset: -28, fill: '#64748B', fontSize: 11 }} />
                 <YAxis yAxisId="left" tick={{ fontSize: 12 }}
                   label={{ value: 'Verification (%)', angle: -90, position: 'insideLeft', fill: '#64748B', fontSize: 11, dx: -4 }} />
                 <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 12 }}
@@ -267,10 +267,10 @@ export default function StudentDashboard() {
           </div>
           {data.symptomTrend.length ? (
             <ResponsiveContainer width="100%" height={240}>
-              <BarChart data={data.symptomTrend} margin={{ top: 4, right: 16, left: 8, bottom: 22 }}>
+              <BarChart data={data.symptomTrend} margin={{ top: 4, right: 16, left: 8, bottom: 44 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
                 <XAxis dataKey="label" tick={{ fontSize: 12 }}
-                  label={{ value: 'Session', position: 'insideBottom', offset: -8, fill: '#64748B', fontSize: 11 }} />
+                  label={{ value: 'Session', position: 'insideBottom', offset: -28, fill: '#64748B', fontSize: 11 }} />
                 <YAxis tick={{ fontSize: 12 }} domain={[0, 10]}
                   label={{ value: 'Severity (0–10)', angle: -90, position: 'insideLeft', fill: '#64748B', fontSize: 11, dx: -4 }} />
                 <Tooltip formatter={(v: unknown, name: unknown) => [`${v}/10`, String(name)]} labelFormatter={l => `Session: ${l}`} />

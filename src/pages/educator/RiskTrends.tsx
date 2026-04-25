@@ -117,10 +117,10 @@ export default function RiskTrends() {
           <h3 style={{ marginBottom: 16 }}>Live Verification vs Baseline</h3>
           {data.verificationTrend.length ? (
             <ResponsiveContainer width="100%" height={250}>
-              <LineChart data={data.verificationTrend} margin={{ top: 4, right: 16, left: 8, bottom: 22 }}>
+              <LineChart data={data.verificationTrend} margin={{ top: 4, right: 16, left: 8, bottom: 44 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
                 <XAxis dataKey="label" tick={{ fontSize: 12 }}
-                  label={{ value: 'Session', position: 'insideBottom', offset: -8, fill: '#64748B', fontSize: 11 }} />
+                  label={{ value: 'Session', position: 'insideBottom', offset: -28, fill: '#64748B', fontSize: 11 }} />
                 <YAxis tick={{ fontSize: 12 }}
                   label={{ value: 'Verification Rate (%)', angle: -90, position: 'insideLeft', fill: '#64748B', fontSize: 11, dx: -4 }} />
                 <Tooltip formatter={(v: unknown, name: unknown) => [`${v}%`, String(name)]} labelFormatter={l => `Session: ${l}`} />
@@ -137,10 +137,10 @@ export default function RiskTrends() {
           <h3 style={{ marginBottom: 16 }}>Risk Trend</h3>
           {data.riskTrend.length ? (
             <ResponsiveContainer width="100%" height={250}>
-              <BarChart data={data.riskTrend} margin={{ top: 4, right: 16, left: 8, bottom: 22 }}>
+              <BarChart data={data.riskTrend} margin={{ top: 4, right: 16, left: 8, bottom: 44 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
                 <XAxis dataKey="label" tick={{ fontSize: 12 }}
-                  label={{ value: 'Session', position: 'insideBottom', offset: -8, fill: '#64748B', fontSize: 11 }} />
+                  label={{ value: 'Session', position: 'insideBottom', offset: -28, fill: '#64748B', fontSize: 11 }} />
                 <YAxis tick={{ fontSize: 12 }}
                   label={{ value: 'Average Risk Score', angle: -90, position: 'insideLeft', fill: '#64748B', fontSize: 11, dx: -4 }} />
                 <Tooltip formatter={(v: unknown) => [`${v}`, 'Avg Risk Score']} labelFormatter={l => `Session: ${l}`} />
@@ -158,10 +158,10 @@ export default function RiskTrends() {
           <h3 style={{ marginBottom: 16 }}>Symptom Trend vs Baseline</h3>
           {data.symptomTrend.length ? (
             <ResponsiveContainer width="100%" height={250}>
-              <LineChart data={data.symptomTrend} margin={{ top: 4, right: 16, left: 8, bottom: 22 }}>
+              <LineChart data={data.symptomTrend} margin={{ top: 4, right: 16, left: 8, bottom: 44 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
                 <XAxis dataKey="label" tick={{ fontSize: 12 }}
-                  label={{ value: 'Session', position: 'insideBottom', offset: -8, fill: '#64748B', fontSize: 11 }} />
+                  label={{ value: 'Session', position: 'insideBottom', offset: -28, fill: '#64748B', fontSize: 11 }} />
                 <YAxis tick={{ fontSize: 12 }} domain={[0, 10]}
                   label={{ value: 'Severity Score (0–10)', angle: -90, position: 'insideLeft', fill: '#64748B', fontSize: 11, dx: -4 }} />
                 <Tooltip formatter={(v: unknown, name: unknown) => [`${v}/10`, String(name)]} labelFormatter={l => `Session: ${l}`} />

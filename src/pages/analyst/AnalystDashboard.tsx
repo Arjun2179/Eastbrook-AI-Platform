@@ -294,10 +294,10 @@ export default function AnalystDashboard() {
           <div className="chart-sub">Daily prompt volume and age-group usage patterns</div>
           <div className="grid grid-2">
             <ResponsiveContainer width="100%" height={260}>
-              <LineChart data={dashboard.dailyTotals} margin={{ top: 4, right: 16, left: 8, bottom: 22 }}>
+              <LineChart data={dashboard.dailyTotals} margin={{ top: 4, right: 16, left: 8, bottom: 44 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
                 <XAxis dataKey="label" tick={{ fontSize: 12 }}
-                  label={{ value: 'Observation Day', position: 'insideBottom', offset: -8, fill: '#64748B', fontSize: 11 }} />
+                  label={{ value: 'Observation Day', position: 'insideBottom', offset: -28, fill: '#64748B', fontSize: 11 }} />
                 <YAxis yAxisId="left" tick={{ fontSize: 12 }}
                   label={{ value: 'Total Prompts/Day', angle: -90, position: 'insideLeft', fill: '#64748B', fontSize: 11, dx: -4 }} />
                 <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 12 }}
@@ -309,10 +309,10 @@ export default function AnalystDashboard() {
               </LineChart>
             </ResponsiveContainer>
             <ResponsiveContainer width="100%" height={260}>
-              <BarChart data={dashboard.ageComparison} margin={{ top: 4, right: 16, left: 8, bottom: 22 }}>
+              <BarChart data={dashboard.ageComparison} margin={{ top: 4, right: 16, left: 8, bottom: 44 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
                 <XAxis dataKey="group" tick={{ fontSize: 12 }}
-                  label={{ value: 'Age Group', position: 'insideBottom', offset: -8, fill: '#64748B', fontSize: 11 }} />
+                  label={{ value: 'Age Group', position: 'insideBottom', offset: -28, fill: '#64748B', fontSize: 11 }} />
                 <YAxis tick={{ fontSize: 12 }}
                   label={{ value: 'Value', angle: -90, position: 'insideLeft', fill: '#64748B', fontSize: 11, dx: -4 }} />
                 <Tooltip formatter={(v: unknown, name: unknown) => [String(name).includes('Screen') ? `${v} hrs` : String(v), String(name)]} labelFormatter={l => `Age Group: ${l}`} />
@@ -331,10 +331,10 @@ export default function AnalystDashboard() {
           <div className="chart-sub">Task complexity and intervention phase comparison</div>
           <div className="grid grid-2">
             <ResponsiveContainer width="100%" height={260}>
-              <LineChart data={dashboard.slope} margin={{ top: 4, right: 16, left: 8, bottom: 22 }}>
+              <LineChart data={dashboard.slope} margin={{ top: 4, right: 16, left: 8, bottom: 44 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
                 <XAxis dataKey="label" tick={{ fontSize: 12 }}
-                  label={{ value: 'Task Complexity', position: 'insideBottom', offset: -8, fill: '#64748B', fontSize: 11 }} />
+                  label={{ value: 'Task Complexity', position: 'insideBottom', offset: -28, fill: '#64748B', fontSize: 11 }} />
                 <YAxis tick={{ fontSize: 12 }}
                   label={{ value: 'Verification Rate (%)', angle: -90, position: 'insideLeft', fill: '#64748B', fontSize: 11, dx: -4 }} />
                 <Tooltip formatter={(v: unknown) => [`${v}%`, 'Verification Rate']} labelFormatter={l => `Complexity: ${l}`} />
@@ -342,10 +342,10 @@ export default function AnalystDashboard() {
               </LineChart>
             </ResponsiveContainer>
             <ResponsiveContainer width="100%" height={260}>
-              <LineChart data={comparison.dailyComparison} margin={{ top: 4, right: 16, left: 8, bottom: 22 }}>
+              <LineChart data={comparison.dailyComparison} margin={{ top: 4, right: 16, left: 8, bottom: 44 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
                 <XAxis dataKey="label" tick={{ fontSize: 12 }}
-                  label={{ value: 'Observation Day', position: 'insideBottom', offset: -8, fill: '#64748B', fontSize: 11 }} />
+                  label={{ value: 'Observation Day', position: 'insideBottom', offset: -28, fill: '#64748B', fontSize: 11 }} />
                 <YAxis tick={{ fontSize: 12 }}
                   label={{ value: 'Verification Rate (%)', angle: -90, position: 'insideLeft', fill: '#64748B', fontSize: 11, dx: -4 }} />
                 <Tooltip formatter={(v: unknown, name: unknown) => [`${v}%`, String(name)]} labelFormatter={l => `Day ${l}`} />
@@ -364,10 +364,10 @@ export default function AnalystDashboard() {
           <div className="chart-sub">Session length and break frequency against symptom severity</div>
           <div className="grid grid-2">
             <ResponsiveContainer width="100%" height={260}>
-              <BarChart data={dashboard.sessionBuckets} margin={{ top: 4, right: 16, left: 8, bottom: 22 }}>
+              <BarChart data={dashboard.sessionBuckets} margin={{ top: 4, right: 16, left: 8, bottom: 44 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
                 <XAxis dataKey="label" tick={{ fontSize: 12 }}
-                  label={{ value: 'Session Duration', position: 'insideBottom', offset: -8, fill: '#64748B', fontSize: 11 }} />
+                  label={{ value: 'Session Duration', position: 'insideBottom', offset: -28, fill: '#64748B', fontSize: 11 }} />
                 <YAxis tick={{ fontSize: 12 }}
                   label={{ value: 'Severity Score (0–10)', angle: -90, position: 'insideLeft', fill: '#64748B', fontSize: 11, dx: -4 }} />
                 <Tooltip formatter={(v: unknown, name: unknown) => [`${Number(v).toFixed(1)}`, String(name)]} labelFormatter={l => `Duration: ${l}`} />
@@ -377,10 +377,10 @@ export default function AnalystDashboard() {
               </BarChart>
             </ResponsiveContainer>
             <ResponsiveContainer width="100%" height={260}>
-              <BarChart data={dashboard.breaksBuckets} margin={{ top: 4, right: 16, left: 8, bottom: 22 }}>
+              <BarChart data={dashboard.breaksBuckets} margin={{ top: 4, right: 16, left: 8, bottom: 44 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
                 <XAxis dataKey="label" tick={{ fontSize: 12 }}
-                  label={{ value: 'Breaks Taken', position: 'insideBottom', offset: -8, fill: '#64748B', fontSize: 11 }} />
+                  label={{ value: 'Breaks Taken', position: 'insideBottom', offset: -28, fill: '#64748B', fontSize: 11 }} />
                 <YAxis tick={{ fontSize: 12 }}
                   label={{ value: 'Severity Score (0–10)', angle: -90, position: 'insideLeft', fill: '#64748B', fontSize: 11, dx: -4 }} />
                 <Tooltip formatter={(v: unknown, name: unknown) => [`${Number(v).toFixed(1)}`, String(name)]} labelFormatter={l => `Breaks: ${l}`} />
@@ -399,10 +399,10 @@ export default function AnalystDashboard() {
           <div className="chart-sub">Latency and cognitive indicators across reliance groups</div>
           <div className="grid grid-2">
             <ResponsiveContainer width="100%" height={260}>
-              <BarChart data={dashboard.latencyComparison} margin={{ top: 4, right: 16, left: 8, bottom: 22 }}>
+              <BarChart data={dashboard.latencyComparison} margin={{ top: 4, right: 16, left: 8, bottom: 44 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
                 <XAxis dataKey="group" tick={{ fontSize: 12 }}
-                  label={{ value: 'Reliance Type', position: 'insideBottom', offset: -8, fill: '#64748B', fontSize: 11 }} />
+                  label={{ value: 'Reliance Type', position: 'insideBottom', offset: -28, fill: '#64748B', fontSize: 11 }} />
                 <YAxis tick={{ fontSize: 12 }}
                   label={{ value: 'Decision Time (seconds)', angle: -90, position: 'insideLeft', fill: '#64748B', fontSize: 11, dx: -4 }} />
                 <Tooltip formatter={(v: unknown, name: unknown) => [`${v}s`, String(name)]} labelFormatter={l => `Reliance: ${l}`} />
@@ -412,10 +412,10 @@ export default function AnalystDashboard() {
               </BarChart>
             </ResponsiveContainer>
             <ResponsiveContainer width="100%" height={260}>
-              <BarChart data={dashboard.cognitiveByReliance} margin={{ top: 4, right: 16, left: 8, bottom: 22 }}>
+              <BarChart data={dashboard.cognitiveByReliance} margin={{ top: 4, right: 16, left: 8, bottom: 44 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
                 <XAxis dataKey="group" tick={{ fontSize: 12 }}
-                  label={{ value: 'Reliance Type', position: 'insideBottom', offset: -8, fill: '#64748B', fontSize: 11 }} />
+                  label={{ value: 'Reliance Type', position: 'insideBottom', offset: -28, fill: '#64748B', fontSize: 11 }} />
                 <YAxis tick={{ fontSize: 12 }}
                   label={{ value: 'Score (0–5 scale)', angle: -90, position: 'insideLeft', fill: '#64748B', fontSize: 11, dx: -4 }} />
                 <Tooltip formatter={(v: unknown, name: unknown) => [`${Number(v).toFixed(2)}`, String(name)]} labelFormatter={l => `Reliance: ${l}`} />
@@ -434,10 +434,10 @@ export default function AnalystDashboard() {
           <div className="chart-sub">Patterns that matter for safeguarding and well-being</div>
           <div className="grid grid-2">
             <ResponsiveContainer width="100%" height={260}>
-              <BarChart data={dashboard.socialByReliance} margin={{ top: 4, right: 16, left: 8, bottom: 22 }}>
+              <BarChart data={dashboard.socialByReliance} margin={{ top: 4, right: 16, left: 8, bottom: 44 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
                 <XAxis dataKey="group" tick={{ fontSize: 12 }}
-                  label={{ value: 'Reliance Type', position: 'insideBottom', offset: -8, fill: '#64748B', fontSize: 11 }} />
+                  label={{ value: 'Reliance Type', position: 'insideBottom', offset: -28, fill: '#64748B', fontSize: 11 }} />
                 <YAxis tick={{ fontSize: 12 }}
                   label={{ value: 'Avg Daily Interactions', angle: -90, position: 'insideLeft', fill: '#64748B', fontSize: 11, dx: -4 }} />
                 <Tooltip formatter={(v: unknown, name: unknown) => [`${Number(v).toFixed(2)}/day`, String(name)]} labelFormatter={l => `Reliance: ${l}`} />
@@ -447,10 +447,10 @@ export default function AnalystDashboard() {
               </BarChart>
             </ResponsiveContainer>
             <ResponsiveContainer width="100%" height={260}>
-              <BarChart data={dashboard.relianceDist} margin={{ top: 4, right: 16, left: 8, bottom: 22 }}>
+              <BarChart data={dashboard.relianceDist} margin={{ top: 4, right: 16, left: 8, bottom: 44 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
                 <XAxis dataKey="label" tick={{ fontSize: 12 }}
-                  label={{ value: 'Reliance Category', position: 'insideBottom', offset: -8, fill: '#64748B', fontSize: 11 }} />
+                  label={{ value: 'Reliance Category', position: 'insideBottom', offset: -28, fill: '#64748B', fontSize: 11 }} />
                 <YAxis tick={{ fontSize: 12 }}
                   label={{ value: 'Number of Students', angle: -90, position: 'insideLeft', fill: '#64748B', fontSize: 11, dx: -4 }} />
                 <Tooltip formatter={(v: unknown) => [`${v} students`, 'Count']} labelFormatter={l => `Category: ${l}`} />
