@@ -2,6 +2,8 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 
 import Landing from './pages/Landing'
+import Login from './pages/auth/Login'
+import Signup from './pages/auth/Signup'
 
 import AppLayout from './components/AppLayout'
 import ProtectedRoute from './components/ProtectedRoute'
@@ -19,11 +21,12 @@ import RiskTrends from './pages/educator/RiskTrends'
 
 import AnalystDashboard from './pages/analyst/AnalystDashboard'
 import PublicComparison from './pages/PublicComparison'
+import GuidedTour from './pages/GuidedTour'
 
 function RoleRedirect() {
   const { profile, loading } = useAuth()
   if (loading) return <div className="loading-page"><div className="spinner" style={{ width: 32, height: 32 }} /></div>
-  if (!profile) return <Navigate to="/" replace />
+  if (!profile) return <Navigate to="/login" replace />
   const map: Record<string, string> = {
     student: '/app/student',
     educator: '/app/educator',
@@ -37,9 +40,10 @@ function AppRoutes() {
     <Routes>
       {/* Public */}
       <Route path="/" element={<Landing />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
       <Route path="/compare" element={<PublicComparison />} />
-      <Route path="/login" element={<Navigate to="/" replace />} />
-      <Route path="/signup" element={<Navigate to="/" replace />} />
+      <Route path="/tour" element={<GuidedTour />} />
 
       {/* Role redirect */}
       <Route path="/app" element={<ProtectedRoute><RoleRedirect /></ProtectedRoute>} />
